@@ -1,0 +1,21 @@
+First we grab the images from the screen. The game is resized to 800x600 pixels and the window is in the top left. 
+The lower resolution reduces the computation. We can get the game screens at approx 5-10 fps. 
+
+On the captured screens, we apply Canny Edge detection. This is required for Hough Transformation that returns straight lines.
+From the straight lines, we use certain properties to find the lanes. These lanes are determined by an unknown algo taken 
+from stack overflow.
+
+Between all of this, we simulate key presses using another code taken from stack overflow. The screen grabbing code is 
+copied as well. The copied code increases the speed of the process.
+
+Now, when the lanes are detected, the agent drives straight most of the time. When it is too much to either side, 
+the lanes appear on only a single side. using the slope of the appearing line in this case, the agent turns. This is working 
+on not so sharp turns.
+
+NEURAL NETWORK DESCRIPTION
+
+For training data, we need features and labels. The features are the pixel values of the grabbed image.
+The labels will be the keypresses the agent should make. 
+
+The create_training_data.py script gets the screens and inputs from the user while the user is playing and saves them 
+in a numpy array. The numpy array is stored on the disk under the name 'training_data.npy'
