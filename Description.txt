@@ -19,3 +19,13 @@ The labels will be the keypresses the agent should make.
 
 The create_training_data.py script gets the screens and inputs from the user while the user is playing and saves them 
 in a numpy array. The numpy array is stored on the disk under the name 'training_data.npy'
+
+We will also need to balance the neural network coz while playing the game, a user's most common input will be the forward key.
+So, the network will always predict the same key except from the specific cases it has seen for different inputs. The network
+will overfit.
+
+For this reason, it's fairly useful, if possible, that we balance the data beforehand. There are other ways to handle this,
+ and many ways to balance data. For me, I am going to elect to just take the data, take the least common row, take it's 
+length, and then set all other classifications to that same max length, effectively throwing out any data over that 
+threshold.
+
