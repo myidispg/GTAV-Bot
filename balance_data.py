@@ -11,11 +11,11 @@ from collections import Counter
 from random import shuffle
 import os
 
-file_name = 'training_data.npy'
+file_name = 'train_data.npy'
 
 if os.path.isfile(file_name):
     print('File exists, loading training data!')
-    train_data = np.load('training_data.npy')
+    train_data = np.load('train_data.npy')
 else:
     print('File does not exist, go and train some data before bothering me!')
 
@@ -53,6 +53,6 @@ if 'train_data' in locals():
 final_data = forwards + lefts + rights
 shuffle(final_data)
 
-np.save('training_data_balanced.npy', final_data)
+np.save('train_data_balanced.npy', final_data)
     
     
