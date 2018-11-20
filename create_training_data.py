@@ -56,7 +56,7 @@ def main():
         last_time = time.time()
         screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
         # resize to feed into a CNN
-        screen = cv2.resize(screen, (66, 200))
+        screen = cv2.resize(screen, (80, 60))
         # convert the input keys from user to a one-hot array.
         keys = key_check()
         output = keys_to_output(keys)

@@ -45,6 +45,7 @@ def process_img(image):
     
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
     #   edges       rho   theta   thresh         # min length, max gap:
+    # Find straight lines
     lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 180, np.array([]), 100, 5)
     m1 = 0
     m2 = 0

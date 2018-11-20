@@ -15,8 +15,8 @@ train_on_gpu = torch.cuda.is_available()
 batch_size = 32
 n_epochs = 8
 lr = 1e-3
-input_width = 66
-input_height = 200
+input_width = 80
+input_height = 60
 
 if not train_on_gpu:
     print('CUDA is not available, training on CPU')
@@ -26,7 +26,7 @@ else:
 import torch.nn as nn
 import torch.nn.functional as F
 
-# Input image is 66x200x1 or 66x200x3 channels. Will see later.
+# Input image is 80x60x1 or 66x200x3 channels. Will see later.
 class Net(nn.Module):
     
     # This network is based on the Nvidia’s Convolutional Neural Network(CNN).
@@ -35,13 +35,13 @@ class Net(nn.Module):
         super(Net, self).__init__()
         # Sees an 66x200x1 image
         self.batch_norm = nn.BatchNorm2d(1)
-        self.conv1 = nn.Conv2d(1, 3, 5) # output 62x196x3
-        self.conv2 = nn.Conv2d(3, 24, 5)  # output 58x192x24
-        self.conv3 = nn.Conv2d(24, 36, 5) # output 54x188x36
-        self.conv4 = nn.Conv2d(36, 48, 3) # output 52x186x48
-        self.conv5 = nn.Conv2d(48, 64, 3) # output 50x184x64
+        self.conv1 = nn.Conv2d(1, 3, 5) # output 76x56x3
+        self.conv2 = nn.Conv2d(3, 24, 5)  # output 72x52x24
+        self.conv3 = nn.Conv2d(24, 36, 5) # output 68x48x36
+        self.conv4 = nn.Conv2d(36, 48, 3) # output 66x46x48
+        self.conv5 = nn.Conv2d(48, 64, 3) # output 64x44x64
         
-        self.fc1 = nn.Linear(64*50*184, 100)
+        self.fc1 = nn.Linear(64 * 44 * 64, 100)
         self.fc2 = nn.Linear(100, 50)
         self.fc3 = nn.Linear(50, 10)
         self.fc4 = nn.Linear(10, 3)
@@ -89,9 +89,17 @@ for epoch in range(n_epochs):
     valid_loss = 0
     
     model.train()
+    for data, target in train_loader():
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()*data.size(0)
     
     
-# Tjis can convert a 4d numpy array to a pytorch dataloader. Useful for training
+# This can convert a 4d numpy array to a pytorch dataloader. Useful for training
+# https://stackoverflow.com/questions/44429199/how-to-load-a-list-of-numpy-arrays-to-pytorch-dataset-loader
 import torch.utils.data as utils
 my_x = np.array([[np.array([[1.0,2],[3,4]]),np.array([[5.,6],[7,8]])], [np.array([[1.0,2],[3,4]]),np.array([[5.,6],[7,8]])]]) # a list of numpy arrays
 my_y = [np.array([4.]), np.array([2.])] # another list of numpy arrays (targets)
