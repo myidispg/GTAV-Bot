@@ -18,7 +18,7 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         # Sees an 60x80x1 image
-        self.batch_norm = nn.BatchNorm2d(1)
+        # self.batch_norm = nn.BatchNorm2d(1)
         self.conv1 = nn.Conv2d(1, 3, 5) # output 56x76x3
         self.conv2 = nn.Conv2d(3, 24, 5)  # output 52x72x24
         self.conv3 = nn.Conv2d(24, 36, 5) # output 48x68x36
@@ -31,7 +31,7 @@ class Net(nn.Module):
         self.fc4 = nn.Linear(10, 3)
         
     def forward(self, x):
-        x = self.batch_norm(x)
+#        x = self.batch_norm(x)
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
@@ -46,18 +46,3 @@ class Net(nn.Module):
         x = F.relu(self.fc4(x))
         
         return x
-    
-for epoch in range(n_epochs):
-    train_loss = 0
-    valid_loss = 0
-    
-    model.train()
-    for data, target in train_loader():
-        optimizer.zero_grad()
-        output = model(data)
-        loss = criterion(output, target)
-        loss.backward()
-        optimizer.step()
-        train_loss += loss.item()*data.size(0)
-    
-    
