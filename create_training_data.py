@@ -68,6 +68,8 @@ def main():
         if len(training_data) % 500 == 0:
             print(len(training_data))
             np.save(file_name,training_data)
+
+main()
             
 
         

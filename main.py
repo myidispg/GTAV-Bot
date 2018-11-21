@@ -9,7 +9,8 @@ Created on Thu Nov 15 17:59:48 2018
 import numpy as np
 import cv2
 import time
-from directkeys import PressKey, ReleaseKey, W, A, S, D
+# from directkeys import PressKey, ReleaseKey, W, A, S, D
+from directkeysv2 import PressKey, ReleaseKey, DIK_W, DIK_A, DIK_S, DIK_D
 from drawlanes import draw_lanes
 from grabscreen import grab_screen
 
@@ -61,8 +62,6 @@ def process_img(image):
             coords = coords[0]
             try:
                 cv2.line(processed_img, (coords[0], coords[1]), (coords[2], coords[3]), [255,0,0], 3)
-                
-                
             except Exception as e:
                 print(str(e))
     except Exception as e:
@@ -72,26 +71,26 @@ def process_img(image):
 
 # Some driving functions
 def straight():
-    PressKey(W)
-    ReleaseKey(A)
-    ReleaseKey(D)
+    PressKey(DIK_W)
+    ReleaseKey(DIK_A)
+    ReleaseKey(DIK_D)
 
 def left():
-    PressKey(A)
-    ReleaseKey(W)
-    ReleaseKey(D)
-    ReleaseKey(A)
+    PressKey(DIK_A)
+    ReleaseKey(DIK_W)
+    ReleaseKey(DIK_D)
+    ReleaseKey(DIK_A)
 
 def right():
-    PressKey(D) 
-    ReleaseKey(A)
-    ReleaseKey(W)
-    ReleaseKey(D)
+    PressKey(DIK_D) 
+    ReleaseKey(DIK_A)
+    ReleaseKey(DIK_W)
+    ReleaseKey(DIK_D)
 
 def hold_your_horses():
-    ReleaseKey(W)
-    ReleaseKey(A)
-    ReleaseKey(D)
+    ReleaseKey(DIK_W)
+    ReleaseKey(DIK_A)
+    ReleaseKey(DIK_D)
 
 
 def main():
@@ -118,7 +117,7 @@ def main():
         # lanes are undetectable. So, the if block reorients the driver.
         if m1 < 0 and m2 < 0:
             right()
-        elif m1 > 0  and m2 > 0:
+        elif m1 > 0  and m2 > 0:waw
             left()
         else:
             straight()
