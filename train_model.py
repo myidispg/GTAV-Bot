@@ -10,26 +10,32 @@ import torch
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
+import os
 
-from ConvNet import Net
+from ConvNet import Net2, AlexNet2
 
 # Check if cuda is available
 train_on_gpu = torch.cuda.is_available()
 
 # Some parameters
 batch_size = 32
-n_epochs = 8
+n_epochs = 80
 lr = 1e-3
 input_width = 80
 input_height = 60
-model_name = "pygta5-car-{}-{}-{}epochs.pt".format(lr, 'convnet', n_epochs)
+model_name = "pygta5-car-{}-{}.pt".format(lr, 'convnet2', n_epochs)
 
 if not train_on_gpu:
     print('CUDA is not available, training on CPU')
 else:
     print('Training on GPU!!!')
-    
-model = Net()
+
+model = Net2()    
+
+# Check if a pretrained model exists
+if os.path.exists(model_name):
+    model.load_state_dict(torch.load(model_name))
+    print('loaded a prexisting model')
 
 import torch.optim as optim
 
@@ -77,13 +83,14 @@ for epoch in range(n_epochs):
     print('Epoch {}- '.format(epoch+1))
     model.train()
     for data, target in dataloader:
+#        print(data.shape)
 #        if train_on_gpu:
 #            data.cuda(), target.cuda()
         optimizer.zero_grad()
         output = model(data)
         label = torch.max(target, 1)[1]
-        print('expeced output- {}    network output- {}'.format(output, ))
-        loss = criterion(output, torch.max(target, 1)[1])
+#        print('expected output- {}    network output- {}'.format(target, output))
+        loss = criterion(output, label)
         loss.backward()
         optimizer.step()
         train_loss += loss.item()*data.size(0)
@@ -95,6 +102,7 @@ for epoch in range(n_epochs):
 #            data.cuda(), target.cuda()
         output = model(data)
         loss = criterion(output, torch.max(target, 1)[1])
+#        loss = criterion(output, target)
         valid_loss += loss.item()*data.size(0)
     
     # Calculate average loss
@@ -113,3 +121,8 @@ for epoch in range(n_epochs):
         torch.save(model.state_dict(), model_name)
         valid_loss_min = valid_loss
 
+input = torch.randn(3, 5, requires_grad=True)
+
+target = torch.empty(3, dtype=torch.long).random_(5)
+
+output = criterion(input, target)
