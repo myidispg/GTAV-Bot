@@ -88,7 +88,6 @@ valid_loss_min = np.Inf
 for epoch in range(n_epochs):
     train_loss = 0
     valid_loss = 0
-    print('Epoch {}- '.format(epoch+1))
     model.train()
     for data, target in dataloader:
 #        print(data.shape)
@@ -119,7 +118,7 @@ for epoch in range(n_epochs):
     
     # print statistics
     print('Epoch: {} \tTraining Loss: {:.6f} \tValidation Loss: {:.6f}'.format(
-        epoch, train_loss, valid_loss))
+        epoch+1, train_loss, valid_loss))
     
      # save model if validation loss has decreased
     if valid_loss <= valid_loss_min:
