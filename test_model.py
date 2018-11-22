@@ -59,8 +59,8 @@ def main():
             print('loop took {} seconds'.format(time.time()-last_time))
             last_time = time.time()
             screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-            screen = cv2.resize(screen, (80,60))
-            moves = list(np.around(model.predict([screen.reshape(80,60,1)])[0]))
+            screen = cv2.resize(screen, (160,120))
+            moves = list(np.around(model.predict([screen.reshape(160,120,1)])[0]))
             if moves == [1,0,0]:
                 left()
             elif moves == [0,1,0]:
