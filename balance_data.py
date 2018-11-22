@@ -11,7 +11,7 @@ from collections import Counter
 from random import shuffle
 import os
 
-file_name = 'train_data.npy'
+base_path = 'train_data/
 
 if os.path.isfile(file_name):
     print('File exists, loading training data!')

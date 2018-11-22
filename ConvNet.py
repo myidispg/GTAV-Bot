@@ -17,7 +17,7 @@ class Net(nn.Module):
     # Image here -> https://cdn-images-1.medium.com/max/800/1*DvkLcBclo6D7q_vF94OEag.png
     def __init__(self):
         super(Net, self).__init__()
-        # Sees an 60x80x1 image
+        # Sees an 80x60x1 image
         # self.batch_norm = nn.BatchNorm2d(1)
         self.conv1 = nn.Conv2d(1, 3, 5) # output 56x76x3
         self.conv2 = nn.Conv2d(3, 24, 5)  # output 52x72x24
@@ -89,25 +89,26 @@ class AlexNet(nn.Module):
     # Based on AlexNet architecture
     def __init__(self):
         super(AlexNet, self).__init__()
-        # input 1x60x80 (Channels x height x width)
+        # input 1x120x160 (Channels x height x width)
         self.features = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=11, stride=4, padding=2), # 1x60x80 -> 19x46x96
+            nn.Conv2d(1, 64, kernel_size=11, stride=4, padding=2), # 1x120x160 -> 64x29x39
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2), # output 9x22x96
-            nn.Conv2d(64, 192, kernel_size=5, padding=2),
+            nn.MaxPool2d(kernel_size=3, stride=2), # output 64x14x19
+            nn.Conv2d(64, 192, kernel_size=5, padding=2), # 64x14x19 -> 192x14x19
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(192, 384, kernel_size=3, padding=1),
+            nn.MaxPool2d(kernel_size=3, stride=2), # 192x6x9
+            nn.Conv2d(192, 384, kernel_size=3, padding=1), # 192x6x9 -> 384x6x9
             nn.ReLU(inplace=True),
-            nn.Conv2d(384, 256, kernel_size=3, padding=1),
+            nn.Conv2d(384, 256, kernel_size=3, padding=1), # 384x6x9 -> 256x6x9
             nn.ReLU(inplace=True),
-            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1), # 256x6x9 -> 256x6x9 
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.MaxPool2d(kernel_size=3, stride=2), # 256x4x2
         )
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(256 * 6 * 6, 4096),
+#            nn.Linear(256 * 6 * 6, 4096),
+            nn.Linear(256 * 4 * 2, 4096),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(4096, 4096),
@@ -117,7 +118,7 @@ class AlexNet(nn.Module):
 
     def forward(self, x):
         x = self.features(x)
-        x = x.view(x.size(0), 256 * 6 * 6)
+        x = x.view(x.size(0), 256 * 4 * 2)
         x = self.classifier(x)
         return x
 

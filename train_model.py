@@ -12,17 +12,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 
-from ConvNet import Net2, AlexNet2
+from ConvNet import Net2, AlexNet
 
 # Check if cuda is available
 train_on_gpu = torch.cuda.is_available()
 
 # Some parameters
 batch_size = 32
-n_epochs = 80
+n_epochs = 15
 lr = 1e-3
-input_width = 80
-input_height = 60
+input_width = 160
+input_height = 120
 model_name = "pygta5-car-{}-{}.pt".format(lr, 'convnet2', n_epochs)
 
 if not train_on_gpu:
@@ -30,7 +30,7 @@ if not train_on_gpu:
 else:
     print('Training on GPU!!!')
 
-model = Net2()    
+model = AlexNet()    
 
 # Check if a pretrained model exists
 if os.path.exists(model_name):
@@ -42,13 +42,21 @@ import torch.optim as optim
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=lr)
 
+
+BASE_DATA_PATH = 'train_data/'
+BASE_MODEL_PATH = 'models/'
+
 # Load the training data
-train_data = np.load('train_data_balanced.npy')
-train = train_data[:-9]
-test = train_data[-9:]
+train_data = np.load(BASE_DATA_PATH + 'training_data-22-balanced.npy')
+train = train_data[:-500]
+test = train_data[-500:]
 
 X = np.array([i[0] for i in train]).reshape(-1, 1, input_height, input_width) /255
 Y = [i[1] for i in train]
+
+#import cv2
+#cv2.imshow('image', X[0])
+#cv2.waitKey(0)
 
 test_X = np.array([i[0] for i in test]).reshape(-1, 1, input_height, input_width) / 255
 test_Y = [i[1] for i in test]
@@ -62,7 +70,7 @@ tensor_y = torch.stack([torch.Tensor(i) for i in Y])
 tensor_valid_X = torch.stack([torch.Tensor(i) for i in test_X])
 tensor_valid_y = torch.stack([torch.Tensor(i) for i in test_Y])
 
-dataset = utils.TensorDataset(tensor_X,tensor_y.long()) # create your datset
+dataset = utils.TensorDataset(tensor_X,tensor_y.long()) # create your dataset
 dataloader = utils.DataLoader(dataset) # create your dataloader
 
 valid_dataset = utils.TensorDataset(tensor_valid_X,tensor_valid_y.long()) # create your validation datset
@@ -121,8 +129,4 @@ for epoch in range(n_epochs):
         torch.save(model.state_dict(), model_name)
         valid_loss_min = valid_loss
 
-input = torch.randn(3, 5, requires_grad=True)
 
-target = torch.empty(3, dtype=torch.long).random_(5)
-
-output = criterion(input, target)
