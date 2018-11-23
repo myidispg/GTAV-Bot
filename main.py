@@ -10,7 +10,7 @@ import numpy as np
 import cv2
 import time
 # from directkeys import PressKey, ReleaseKey, W, A, S, D
-from directkeysv2 import PressKey, ReleaseKey, DIK_W, DIK_A, DIK_S, DIK_D
+from directkeys import PressKey,ReleaseKey, W, A, S, D
 from drawlanes import draw_lanes
 from grabscreen import grab_screen
 
@@ -71,26 +71,26 @@ def process_img(image):
 
 # Some driving functions
 def straight():
-    PressKey(DIK_W)
-    ReleaseKey(DIK_A)
-    ReleaseKey(DIK_D)
+    PressKey(W)
+    ReleaseKey(A)
+    ReleaseKey(D)
 
 def left():
-    PressKey(DIK_A)
-    ReleaseKey(DIK_W)
-    ReleaseKey(DIK_D)
-    ReleaseKey(DIK_A)
+    PressKey(A)
+    ReleaseKey(W)
+    ReleaseKey(D)
+    ReleaseKey(A)
 
 def right():
-    PressKey(DIK_D) 
-    ReleaseKey(DIK_A)
-    ReleaseKey(DIK_W)
-    ReleaseKey(DIK_D)
+    PressKey(D) 
+    ReleaseKey(A)
+    ReleaseKey(W)
+    ReleaseKey(D)
 
 def hold_your_horses():
-    ReleaseKey(DIK_W)
-    ReleaseKey(DIK_A)
-    ReleaseKey(DIK_D)
+    ReleaseKey(W)
+    ReleaseKey(A)
+    ReleaseKey(D)
 
 
 def main():
@@ -117,7 +117,7 @@ def main():
         # lanes are undetectable. So, the if block reorients the driver.
         if m1 < 0 and m2 < 0:
             right()
-        elif m1 > 0  and m2 > 0:waw
+        elif m1 > 0  and m2 > 0:
             left()
         else:
             straight()

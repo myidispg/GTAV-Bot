@@ -46,29 +46,42 @@ else:
 # The main function to get screenshots.
 
 def main():
+    last_time = time.time()
+    
     for i in list(range(4))[::-1]:
         print(i+1)
         time.sleep(1)
-        
+    paused = False
     while(True):
-        # 800x600 windowed mode top left of screen
-        screen = grab_screen(region=(0, 40, 800, 640))
-        last_time = time.time()
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-        # resize to feed into a CNN
-        screen = cv2.resize(screen, (160, 120))
-        # convert the input keys from user to a one-hot array.
+        if not paused:
+            # 800x600 windowed mode top left of screen
+            screen = grab_screen(region=(0, 40, 800, 640))
+            print('loop took {} seconds'.format(time.time()-last_time))
+            screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
+            # resize to feed into a CNN
+            screen = cv2.resize(screen, (160, 120))
+            # convert the input keys from user to a one-hot array.
+            keys = key_check()
+            output = keys_to_output(keys)
+            training_data.append([screen, output])
+            
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                cv2.destroyAllWindows()
+                break
+            if len(training_data) % 500 == 0:
+                print(len(training_data))
+                np.save(file_name,training_data)
         keys = key_check()
-        output = keys_to_output(keys)
-        training_data.append([screen, output])
         
-        if cv2.waitKey(25) & 0xFF == ord('q'):
-            cv2.destroyAllWindows()
-            break
-        if len(training_data) % 500 == 0:
-            print(len(training_data))
-            np.save(file_name,training_data)
-
+        if 'T' in keys:
+            if paused:
+                paused = False
+                print('paused')
+                time.sleep(1)
+            else:
+                paused = True
+                time.sleep(1)
+                
 main()
             
 

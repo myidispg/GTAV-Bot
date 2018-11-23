@@ -11,11 +11,11 @@ from collections import Counter
 from random import shuffle
 import os
 
-base_path = 'train_data/
+base_path = 'train_data/train_data.npy'
 
-if os.path.isfile(file_name):
+if os.path.isfile(base_path):
     print('File exists, loading training data!')
-    train_data = np.load('train_data.npy')
+    train_data = np.load(base_path)
 else:
     print('File does not exist, go and train some data before bothering me!')
 
@@ -43,7 +43,7 @@ if 'train_data' in locals():
         else:
             print('no matches')
         
-    shortest_lengths = min(len(lefts), len(forwards), len(rights))
+    shortest_lengths = min(len(lefts), len(forwards), len(rights)) * 3
     
     # get the first indexes. Count depends on minimum of the turns.
     forwards = forwards[:shortest_lengths]
