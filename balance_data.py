@@ -43,16 +43,17 @@ if 'train_data' in locals():
         else:
             print('no matches')
         
-    shortest_lengths = min(len(lefts), len(forwards), len(rights)) * 3
+#    shortest_lengths = min(len(lefts), len(forwards), len(rights)) * 3
+    length = max(len(lefts), len(rights)) * 3
     
     # get the first indexes. Count depends on minimum of the turns.
-    forwards = forwards[:shortest_lengths]
-    lefts = lefts[:shortest_lengths]
-    rights = rights[:shortest_lengths]
+    forwards = forwards[:length]
+    lefts = lefts[:length]
+    rights = rights[:length]
     
 final_data = forwards + lefts + rights
 shuffle(final_data)
 
-np.save('train_data_balanced.npy', final_data)
+np.save('train_data_self_balanced.npy', final_data)
     
     

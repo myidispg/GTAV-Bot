@@ -76,10 +76,11 @@ def main():
         if 'T' in keys:
             if paused:
                 paused = False
-                print('paused')
+                print('unpaused')
                 time.sleep(1)
             else:
                 paused = True
+                print('Paused')
                 time.sleep(1)
                 
 main()

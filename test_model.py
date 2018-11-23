@@ -10,9 +10,9 @@ import numpy as np
 import cv2
 import time
 from directkeys import PressKey,ReleaseKey, W, A, S, D
-from ConvNet import Net2, AlexNet
+#from ConvNet import Net2, AlexNet
 import os
-import torch
+# import torch
 from getkeys import key_check
 from grabscreen import grab_screen
 
@@ -21,7 +21,9 @@ n_epochs = 80
 lr = 1e-3
 input_width = 160
 input_height = 120
-model_name = "pygta5-car-{}-{}.pt".format(lr, 'convnet2', n_epochs)
+model_name = "models/pygta5-car-fast-{}-{}-{}-epochs-300K-data.model".format(lr, 'alexnetv2', n_epochs)
+
+t_time = 0.09
 
 def straight():
     PressKey(W)
@@ -31,14 +33,27 @@ def straight():
 def left():
     PressKey(W)
     PressKey(A)
+    #ReleaseKey(W)
     ReleaseKey(D)
+    #ReleaseKey(A)
+    time.sleep(t_time)
+    ReleaseKey(A)
 
 def right():
     PressKey(W)
     PressKey(D)
     ReleaseKey(A)
 
-model = AlexNet()
+    time.sleep(t_time)
+    ReleaseKey(D)
+
+#model = AlexNet()
+
+from alexnet import alexnet
+
+model = alexnet(input_width, input_height, lr)
+model.load(model_name)
+
 
 if os.path.exists(model_name):
     model.load_state_dict(torch.load(model_name))
@@ -69,15 +84,30 @@ def main():
 #                straight()
 #            elif moves == [0,0,1]:
 #                right()
-            screen = torch.Tensor([screen.reshape(1,160,120)])
-            moves = model(screen)[0].detach().numpy()
-            moves = np.argmax(moves)
-            if moves == 0:
-                left()
-            elif moves == 1:
+#            screen = torch.Tensor([screen.reshape(1,160,120)])
+#            moves = model(screen)[0].detach().numpy()
+#            moves = np.argmax(moves)
+            prediction = model.predict([screen.reshape(160,120,1)])[0]
+            print(prediction)
+
+            left_turn_thresh = .405
+            right_turn_thresh = .35
+            fwd_thresh = 0.70
+            
+#            if moves == 0:
+#               left()
+#           elif moves == 1:
+#               straight()
+#           elif moves == 2:
+#               right()
+            if prediction[1] > fwd_thresh:
                 straight()
-            elif moves == 2:
+            elif prediction[0] > left_turn_thresh:
                 right()
+            elif prediction[2] > right_turn_thresh:
+                left()
+            else:
+                straight()
    
         keys = key_check()
 

@@ -18,12 +18,15 @@ from ConvNet import Net2, AlexNet
 train_on_gpu = torch.cuda.is_available()
 
 # Some parameters
+
+BASE_DATA_PATH = 'train_data/'
+BASE_MODEL_PATH = 'models/'
 batch_size = 32
 n_epochs = 15
 lr = 1e-3
 input_width = 160
 input_height = 120
-model_name = "pygta5-car-{}-{}.pt".format(lr, 'convnet2', n_epochs)
+model_name = "pygta5-sanchez-self-{}-{}.pt".format(lr, 'alexnet', n_epochs)
 
 if not train_on_gpu:
     print('CUDA is not available, training on CPU')
@@ -33,8 +36,8 @@ else:
 model = AlexNet()    
 
 # Check if a pretrained model exists
-if os.path.exists(model_name):
-    model.load_state_dict(torch.load(model_name))
+if os.path.exists(BASE_MODEL_PATH + model_name):
+    model.load_state_dict(torch.load(BASE_MODEL_PATH + model_name))
     print('loaded a prexisting model')
 
 import torch.optim as optim
@@ -42,12 +45,8 @@ import torch.optim as optim
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=lr)
 
-
-BASE_DATA_PATH = 'train_data/'
-BASE_MODEL_PATH = 'models/'
-
 # Load the training data
-train_data = np.load(BASE_DATA_PATH + 'training_data-22-balanced.npy')
+train_data = np.load(BASE_DATA_PATH + 'train_data_self_balanced.npy')
 train = train_data[:-500]
 test = train_data[-500:]
 
