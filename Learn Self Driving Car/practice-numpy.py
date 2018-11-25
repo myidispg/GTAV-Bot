@@ -40,3 +40,21 @@ np.zeros((3,2), dtype=int)
 print(np.eye(3)) # Identity matrix.
 
 np.random.rand(4, 4)
+
+# Matrix multiplication
+mat_a = np.matrix([0,3,5,5,5,2]).reshape(2,3)
+mat_b = np.matrix([3,4,3,-2, 4, -2]).reshape(3,2)
+print(np.matmul(mat_a, mat_b))
+
+# Stacking
+x = np.arange(4).reshape(2,2)
+print(x)
+y = np.arange(4, 8).reshape(2,2)
+print(y)
+z = np.hstack((x,y)) # Stack arrays horizontally.
+#Must have the same shape along all but the 2nd axis.
+print(z)
+q = np.vstack((x,y))
+print(q)
+
+print(np.concatenate((x,y), axis=1))
