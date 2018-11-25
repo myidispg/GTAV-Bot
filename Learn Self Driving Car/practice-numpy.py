@@ -21,3 +21,22 @@ comparison_operation = x > 5
 print(comparison_operation)
 x[comparison_operation]
 x[x>5]
+
+# Manipulating array shape
+ravelled_array = x.ravel() # returns a view of the original array. 
+# ^^Modifying this will modify the original array as well
+flattened_array = x.flatten() # returns  a new copy.
+
+y = np.arange(9)
+y.shape=[3,3]
+print(y)
+
+print(y.transpose())
+
+print(np.resize(y, (5,5)))
+
+np.zeros((3,2), dtype=int)
+
+print(np.eye(3)) # Identity matrix.
+
+np.random.rand(4, 4)
