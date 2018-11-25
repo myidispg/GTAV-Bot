@@ -57,4 +57,12 @@ print(z)
 q = np.vstack((x,y))
 print(q)
 
-print(np.concatenate((x,y), axis=1))
+print(np.concatenate((x,y), axis=1) == z)
+
+# depth stacking
+y = x * 2
+depth_stack = np.dstack((x, y))
+
+np.column_stack((x,y)) == np.hstack((x,y))
+np.row_stack((x,y)) == np.vstack((x,y))
+
